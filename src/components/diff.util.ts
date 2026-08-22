@@ -23,11 +23,11 @@ export function computeDiff(baseline: LineItem[], proposed: LineItem[]): DiffRow
 
 	for (const b of baseline) {
 		const p = proposedBySku.get(b.sku);
-		if (!p) {
-			rows.push({ sku: b.sku, kind: 'removed', baseline: b });
+		if (!p) { // so here we need if there is no p then it should be null
+			rows.push({ sku: b.sku, kind: 'removed', baseline: b , proposed:null });
 			continue;
 		}
-		const changed = b.unitPrice !== p.unitPrice;
+		const changed = (b.unitPrice !== p.unitPrice);
 		rows.push({ sku: b.sku, kind: changed ? 'changed' : 'unchanged', baseline: b, proposed: p });
 	}
 	for (const p of proposed) {
