@@ -6,7 +6,8 @@
 ## 1. What I changed
 <!-- Grouped by task: bugs fixed and features implemented (component + template). -->
 
--
+- `diff.util.ts`: Updated the comparison logic in `computeDiff` to evaluate both `unitPrice` and `quantity` differences (`b.unitPrice !== p.unitPrice || b.quantity !== p.quantity`), fixing misclassified line-item changes
+- `cr-detail.component.ts`: Updated `canApprove` and `canReject` getters to check for the user's `'cr_a_o'` policy string via `SessionService` in addition to checking `PENDING_APPROVAL` status.
 
 ## 2. Component & state model
 <!-- The screens, the view-state each component exposes, and how data flows from the mock API into the
