@@ -56,9 +56,9 @@ export class CrDetailComponent implements OnInit {
 	/** Approval timeline, oldest-first. */
 	get timeline(): TimelineEntry[] {
 		// TODO: return the audit entries ordered chronologically (oldest first).
-		return this.detail?.audit ?? [];
+		const audit = this.detail?.audit ?? [];
+		return [...audit].sort((a, b) => new Date(a.at).getTime() - new Date(b.at).getTime());
 	}
-
 
 	get hasApprove(): boolean {
 		return this.session.user?.policies.includes('cr_a_o') ?? false;
@@ -80,12 +80,37 @@ export class CrDetailComponent implements OnInit {
 
 	async approve(): Promise<void> {
 		// TODO: perform the approve action through the API and reflect the outcome in the view.
-		throw new Error('approve() not implemented');
+		const invalid = !this.canApprove || this.submitting;
+		if (invalid) return;
+		this.submitting = true;
+		try {
+			const at = new Date().toISOString();
+			const updated = await this.api.approve(this.session.user, this.id, at);
+			this.state = { status: 'loaded', data: updated };
+		} catch (err) {
+			this.actionError = (err as Error).message;
+		}
+		this.submitting = false;
 	}
 
 	async reject(): Promise<void> {
 		// TODO: require a valid rejectControl, then perform the reject action through the API and
 		//       reflect the outcome in the view.
-		throw new Error('reject() not implemented');
+		if (!this.canReject || this.submitting) return;
+		if (this.rejectControl.invalid) {
+			this.rejectControl.markAsTouched();
+			return;
+		}
+
+		this.submitting = true;
+		this.actionError = undefined;
+		try {
+			const updated = await this.api.reject(this.session.user, this.id, new Date().toISOString(), this.rejectControl.value);
+			this.state = { status: 'loaded', data: updated };
+			this.rejectControl.reset();
+		} catch (err) {
+			this.actionError = (err as Error).message;
+		}
+		this.submitting = false;
 	}
 }
