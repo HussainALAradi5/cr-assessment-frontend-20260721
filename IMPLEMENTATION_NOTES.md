@@ -1,6 +1,11 @@
 # Implementation Notes
 
+> Fill this in as part of your submission. 1–2 pages, bullet points are fine. Delete these
+> instructions before submitting.
+
 ## 1. What I changed
+
+<!-- Grouped by task: bugs fixed and features implemented (component + template). -->
 
 - `diff.util.ts`: Updated the comparison logic in `computeDiff` to evaluate both `unitPrice` and `quantity` changes (`b.unitPrice !== p.unitPrice || b.quantity !== p.quantity`), fixing misclassified line-item changes.
 - `cr-detail.component.ts`:
@@ -13,10 +18,15 @@
 
 ## 2. Component & state model
 
+<!-- The screens, the view-state each component exposes, and how data flows from the mock API into the
+template. -->
+
 - **Explicit View-States:** Both list and detail components rely on a structured `ViewState<T>` union type (`idle`, `loading`, `loaded`, `error`) to represent asynchronous UI phases cleanly without hidden flags.
 - **Data Flow:** Data flows asynchronously from the mock `CrApiService` into component states via Promises. Templates reactively bind to these states, ensuring proper loading spinners, error banners with retry capabilities, and fallback empty states.
 
 ## 3. Invariants I keep
+
+<!-- Which properties the UI guarantees, and where in the component/template each is enforced. -->
 
 | Invariant                              | How / where                                                                                                                                                         |
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -26,10 +36,14 @@
 
 ## 4. Testing strategy
 
+<!-- What you tested (component/DOM vs pure) and why; what you deliberately skipped given the budget. -->
+
 - **Unit & DOM Testing:** Used Jest and Angular TestBed to test component rendering, user interactions, and DOM element states asynchronously.
 - **Behavior-Driven Focus:** Focused on testing core business logic and edge cases—such as form validation triggers, chronological sorting invariants, and error resilience (`failNext`)—rather than blindly chasing code coverage percentages.
 
 ## 5. Assumptions
+
+<!-- Where the requirements left room for interpretation, the calls you made and why. -->
 
 - Utilized standard ISO strings (`new Date().toISOString()`) for action timestamps when dispatching approvals and rejections through the mock API service.
 - Maintained the existing standalone component architecture and styling patterns without introducing external UI component libraries.
